@@ -19,15 +19,12 @@ public class Node<T> implements Comparable<Node<T>>{
         this(state, null);
     }
 
+    /* ADD METHODS */
     public boolean addChild(T state) { return children.add(new Node<T>(state, this)); }
     public boolean addChildren(Collection<T> children) {
         if (children.isEmpty()) return false;
         for (T state : children) addChild(state);
         return true;
-        /*this.children.addAll(
-         children.stream().map(
-            state -> new Node<T>(state, this)
-        ).collect(Collectors.toList()));*/
 }
 
     /* GETTERS */
@@ -39,6 +36,11 @@ public class Node<T> implements Comparable<Node<T>>{
     private int getLevel(Node<T> node) {
         if (node == null) return 0;
         return getLevel(node.parent) + 1;
+    }
+
+    /* SETTERS */
+    public void setEvaluation(double evaluation) {
+        this.evaluation = evaluation;
     }
     
     /* IS METHODS */
@@ -59,4 +61,9 @@ public class Node<T> implements Comparable<Node<T>>{
     public int compareTo(Node<T> o) {
         return Double.compare(evaluation, o.evaluation);
     }
+
+    /*@SuppressWarnings ("unchecked")
+    public <E extends Node<T>> double evaluate(Assessable<E> assessable) {
+        return evaluation = assessable.evaluate((E)this);
+    }*/
 }
