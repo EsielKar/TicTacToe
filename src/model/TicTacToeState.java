@@ -16,7 +16,7 @@ public final class TicTacToeState{
         return copy;
     }
 
-    public int leftMoves() {
+    public int remainingMoves() {
         int count = 0;
         for (int i = 0 ; i < gameboard.length ; i++)
             for (int j = 0 ; j < gameboard[i].length ; j++)
@@ -35,6 +35,12 @@ public final class TicTacToeState{
                 }
             }
             sb.append('\n');
+            if (i < gameboard.length - 1) {
+                for (int j = 0 ; j < gameboard[i].length * 2 - 1 ; j++)
+                    sb.append('-');
+                sb.append('\n');
+            } 
+            
         }
         return sb.toString();
     }

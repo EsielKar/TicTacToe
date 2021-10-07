@@ -13,7 +13,7 @@ public class MinimaxTicTacToeStrategy implements TicTacToeStrategy {
     public Tree<TicTacToeNode> execute(TicTacToeFunction function) {
         TicTacToeNode initialNode = function.initial;        
         long initTime = System.currentTimeMillis();
-        minimax(initialNode, function, Math.min(initialNode.getState().leftMoves(), deepLimit));
+        minimax(initialNode, function, Math.min(initialNode.getState().remainingMoves(), deepLimit));
         System.out.println("Tiempo total: " + (System.currentTimeMillis() - initTime) + " milisegundos");
         return new Tree<TicTacToeNode>(initialNode);
     }
