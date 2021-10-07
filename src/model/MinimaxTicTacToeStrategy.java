@@ -1,5 +1,7 @@
 package model;
 
+import java.util.stream.Collectors;
+
 import model.function.Tree;
 
 public class MinimaxTicTacToeStrategy implements TicTacToeStrategy {
@@ -11,32 +13,31 @@ public class MinimaxTicTacToeStrategy implements TicTacToeStrategy {
 
     @Override
     public Tree<TicTacToeNode> execute(TicTacToeFunction function) {
-        TicTacToeNode initialNode = function.initial;        
+        Tree<TicTacToeNode> tree = new Tree<>(function.initial);      
         long initTime = System.currentTimeMillis();
-        minimax(initialNode, function, Math.min(initialNode.getState().remainingMoves(), deepLimit));
+        minimax(tree.getRoot(), function, Math.min(tree.getRoot().getState().remainingMoves(), deepLimit));
         System.out.println("Tiempo total: " + (System.currentTimeMillis() - initTime) + " milisegundos");
-        return new Tree<TicTacToeNode>(initialNode);
+        return tree;
     }
 
     private void minimax(TicTacToeNode node, TicTacToeFunction function, int limit) {
         if (node.getLevel() < limit) {
-            node.addChildren(node.getState().generateNextStates((node.isMax() ? TicTacToePlayer.MAX : TicTacToePlayer.MIN)));
-            /*for (var s : node.getState().generateNextStates((node.isMax() ? TicTacToePlayer.MAX : TicTacToePlayer.MIN))){
-                node.addChild(s);
-            }*/
-            //node.generateChildren();
+            //node.addChildren(TicTacToeGame.generateNextStates(node.tile, node.getState()).stream().distinct().collect(Collectors.toList()));
+            node.addChildren(node.getState().generateNextStatesFiltered(node.tile));
             for (TicTacToeNode child : node.getChildren()) {
-                TicTacToePlayer winner = child.getState().findWinner();
+                TicTacToeTile winner = TicTacToeGame.findWinner(child.getState());
                 if (winner == null) minimax(child, function, limit);
-                else child.setEvaluation((winner == TicTacToePlayer.MAX) ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY);
+                else
+                    if (child.isMax)
+                        child.setEvaluation((child.tile == winner) ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY);
+                    else
+                        child.setEvaluation((child.tile == winner) ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY); 
             }
 
             for (TicTacToeNode child : node.getChildren()) {
-                if (node.isMax()) node.setEvaluation(Math.max(node.getEvaluation(), child.getEvaluation()));   
+                if (node.isMax) node.setEvaluation(Math.max(node.getEvaluation(), child.getEvaluation()));   
                 else node.setEvaluation(Math.min(node.getEvaluation(), child.getEvaluation()));
             }
         } else node.evaluate(function);
-    }
-
-    
+    }    
 }

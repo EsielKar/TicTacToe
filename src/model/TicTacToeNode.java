@@ -8,22 +8,27 @@ import model.function.Node;
 
 
 public final class TicTacToeNode extends Node<TicTacToeState> {
-    private final TicTacToePlayer player;
+    public final TicTacToeTile tile;
+    public final boolean isMax;
 
-    private TicTacToeNode(TicTacToeState state, Node<TicTacToeState> parent, TicTacToePlayer player) {
+    private TicTacToeNode(TicTacToeState state, Node<TicTacToeState> parent, TicTacToeTile tile, boolean isMax) {
         super(state, parent);
         children = new LinkedList<>();
-        evaluation = (this.player = player) == TicTacToePlayer.MAX ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
+        this.tile = tile;
+        evaluation = (this.isMax = isMax) ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
     }
 
-    public TicTacToeNode(TicTacToeState state, TicTacToePlayer player) {
-        this(state, null, player);
+    public TicTacToeNode(TicTacToeState state, TicTacToeTile tile, boolean isMax) {
+        this(state, null, tile, isMax);
+    }
+
+    public TicTacToeNode(TicTacToeState state, TicTacToeTile tile) {
+        this(state, null, tile, true);
     }
     
     /* GETTERS */
     @Override
     public TicTacToeNode getParent() { return (TicTacToeNode) super.getParent(); }
-    public TicTacToePlayer getPlayer() { return player; }
     
     @Override @SuppressWarnings ("unchecked")
     public LinkedList<TicTacToeNode> getChildren() {
@@ -33,7 +38,7 @@ public final class TicTacToeNode extends Node<TicTacToeState> {
     /* ADD METHODS */
     @Override
     public boolean addChild(TicTacToeState state) {
-        return children.add(new TicTacToeNode(state, this, (this.isMax() ? TicTacToePlayer.MIN : TicTacToePlayer.MAX)));
+        return children.add(new TicTacToeNode(state, this, tile.getOppositeTile(), !isMax));
     }
     @Override
     public boolean addChildren(Collection<TicTacToeState> children) {
@@ -54,10 +59,6 @@ public final class TicTacToeNode extends Node<TicTacToeState> {
         return this.state.equals(ticTacToeNode.state);
     }
 
-    
-    /* IS METHODS */
-    public boolean isMax() { return player == TicTacToePlayer.MAX; }
-
     public double evaluate(Assessable<TicTacToeNode> assessable) {
         return evaluation = assessable.evaluate(this);
     }
@@ -68,7 +69,7 @@ public final class TicTacToeNode extends Node<TicTacToeState> {
         return null;
     }
 
-    /*public TicTacToeNode getBestChild() {
+    /*public TicTacToeNode getBestChildOf(TicTacToeNode node) {
         if (children == null || children.isEmpty()) return null;
         var bestChild = getChildren().getFirst();
         for (var child : children) {

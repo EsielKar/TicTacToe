@@ -12,8 +12,8 @@ public class TicTacToeFunction implements Assessable<TicTacToeNode> {
 
     @Override
     public double evaluate(TicTacToeNode node) {
-        return node.getState().possibleWinsOf(node.getPlayer()) - 
-        node.getState().possibleWinsOf((node.isMax()) ? TicTacToePlayer.MIN : TicTacToePlayer.MAX);
+        return TicTacToeGame.possibleWins(node.tile, node.getState()) - 
+        TicTacToeGame.possibleWins(node.tile.getOppositeTile(), node.getState());
     }
     
 }
