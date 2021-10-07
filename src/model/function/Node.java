@@ -2,9 +2,10 @@ package model.function;
 
 import java.util.Collection;
 
-public abstract class Node<T> implements Comparable<Node<T>>{
-    private Node<T> parent;
-    protected Collection<? extends Node<T>> children;
+
+public class Node<T> implements Comparable<Node<T>>{
+    protected Node<T> parent;
+    protected Collection<Node<T>> children;
     
     protected T state;
     protected double evaluation = Double.NaN;
@@ -18,8 +19,16 @@ public abstract class Node<T> implements Comparable<Node<T>>{
         this(state, null);
     }
 
-    /* Abstract Method */
-    public abstract void generateChildren();
+    public boolean addChild(T state) { return children.add(new Node<T>(state, this)); }
+    public boolean addChildren(Collection<T> children) {
+        if (children.isEmpty()) return false;
+        for (T state : children) addChild(state);
+        return true;
+        /*this.children.addAll(
+         children.stream().map(
+            state -> new Node<T>(state, this)
+        ).collect(Collectors.toList()));*/
+}
 
     /* GETTERS */
     public double getEvaluation() { return evaluation; }
@@ -32,12 +41,8 @@ public abstract class Node<T> implements Comparable<Node<T>>{
         return getLevel(node.parent) + 1;
     }
     
+    /* IS METHODS */
     public boolean isEvaluated() { return evaluation != Double.NaN; }
-
-    @SuppressWarnings ("unchecked")
-    public <E extends Node<T>> double evaluate(Assessable<E> assessable) {
-        return evaluation = assessable.evaluate((E)this);
-    }
 
     @Override
     public boolean equals(Object o) {

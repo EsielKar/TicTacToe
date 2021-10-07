@@ -20,7 +20,11 @@ public class MinimaxTicTacToeStrategy implements TicTacToeStrategy {
 
     private void minimax(TicTacToeNode node, TicTacToeFunction function, int limit) {
         if (node.getLevel() < limit) {
-            node.generateChildren();
+            node.addChildren(node.getState().generateNextStates((node.isMax() ? TicTacToePlayer.MAX : TicTacToePlayer.MIN)));
+            /*for (var s : node.getState().generateNextStates((node.isMax() ? TicTacToePlayer.MAX : TicTacToePlayer.MIN))){
+                node.addChild(s);
+            }*/
+            //node.generateChildren();
             for (TicTacToeNode child : node.getChildren()) {
                 TicTacToePlayer winner = child.getState().findWinner();
                 if (winner == null) minimax(child, function, limit);

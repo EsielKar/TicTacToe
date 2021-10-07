@@ -17,7 +17,7 @@ public class App {
 
 
         TicTacToeNode inicialNode = new TicTacToeNode(inicial, TicTacToePlayer.MAX);
-        MinimaxTicTacToeStrategy strategy = new MinimaxTicTacToeStrategy(6);
+        MinimaxTicTacToeStrategy strategy = new MinimaxTicTacToeStrategy(8);
         System.out.println(strategy.execute(new TicTacToeFunction(inicialNode)).getRoot().getEvaluation());
     }  
 }
