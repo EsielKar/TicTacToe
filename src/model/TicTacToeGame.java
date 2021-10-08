@@ -1,10 +1,55 @@
 package model;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class TicTacToeGame {
-    //CPU
-    //HUMAN
+public final class TicTacToeGame {
+    private final TicTacToePlayer p1;
+    private final TicTacToePlayer p2;
+
+
+    public TicTacToeGame(TicTacToePlayer p1, TicTacToePlayer p2) {
+        this.p1 = p1;
+        this.p2 = p2;
+    }
+
+    public void play() {
+        TicTacToeState game = new TicTacToeState(
+            new TicTacToeTile[][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            }
+        );
+        boolean band = true;
+        while (!game.isFinished() && TicTacToeGame.findWinner(game) == null) {
+            availableMoves(game);
+            if (band) {
+                game = p1.getMove(game);
+                band = false;
+            }else {
+                game = p2.getMove(game);
+                band = true;
+            }
+            System.out.println(game);
+        }
+
+        System.out.println("Winner: " + TicTacToeGame.findWinner(game));
+
+    }
+
+    public static List<Integer> availableMoves(TicTacToeState state) {
+        ArrayList<Integer> availableMoves = new ArrayList<>();
+        for (int i = 0, k = 1 ; i < state.gameboard.length ; i++) {
+            for (int j = 0 ; j < state.gameboard[i].length ; j++) {
+                if (state.gameboard[i][j] == null) availableMoves.add(k);
+                k++;
+            }
+        }
+        return availableMoves;
+        //System.out.println(availableMoves);
+    }
 
     public static LinkedList<TicTacToeState> generateNextStates(TicTacToeTile of, TicTacToeState in) {
         LinkedList<TicTacToeState> states = new LinkedList<TicTacToeState>();

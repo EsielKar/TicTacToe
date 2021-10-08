@@ -35,6 +35,10 @@ public final class TicTacToeNode extends Node<TicTacToeState> {
         return (LinkedList<TicTacToeNode>) super.getChildren();
     }
 
+    public boolean hasChildren() {
+        return !children.isEmpty();
+    }
+
     /* ADD METHODS */
     @Override
     public boolean addChild(TicTacToeState state) {
@@ -69,13 +73,15 @@ public final class TicTacToeNode extends Node<TicTacToeState> {
         return null;
     }
 
-    /*public TicTacToeNode getBestChildOf(TicTacToeNode node) {
+    public TicTacToeNode getBestChild() {
         if (children == null || children.isEmpty()) return null;
         var bestChild = getChildren().getFirst();
-        for (var child : children) {
-
-        }
-
+        if (children.size() > 1)
+            for (int i = 1 ; i < children.size() ; i++) {
+                if (getChildren().get(i).getEvaluation() == 0) return getChildren().get(i);
+                if (getChildren().get(i).evaluation > bestChild.getEvaluation())
+                    bestChild = getChildren().get(i);
+            }
         return bestChild;
-    }*/
+    }
 }

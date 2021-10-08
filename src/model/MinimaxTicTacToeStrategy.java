@@ -1,7 +1,5 @@
 package model;
 
-import java.util.stream.Collectors;
-
 import model.function.Tree;
 
 public class MinimaxTicTacToeStrategy implements TicTacToeStrategy {
@@ -14,15 +12,14 @@ public class MinimaxTicTacToeStrategy implements TicTacToeStrategy {
     @Override
     public Tree<TicTacToeNode> execute(TicTacToeFunction function) {
         Tree<TicTacToeNode> tree = new Tree<>(function.initial);      
-        long initTime = System.currentTimeMillis();
+        //long initTime = System.currentTimeMillis();
         minimax(tree.getRoot(), function, Math.min(tree.getRoot().getState().remainingMoves(), deepLimit));
-        System.out.println("Tiempo total: " + (System.currentTimeMillis() - initTime) + " milisegundos");
+        //System.out.println("Tiempo total: " + (System.currentTimeMillis() - initTime) + " milisegundos");
         return tree;
     }
 
     private void minimax(TicTacToeNode node, TicTacToeFunction function, int limit) {
         if (node.getLevel() < limit) {
-            //node.addChildren(TicTacToeGame.generateNextStates(node.tile, node.getState()).stream().distinct().collect(Collectors.toList()));
             node.addChildren(node.getState().generateNextStatesFiltered(node.tile));
             for (TicTacToeNode child : node.getChildren()) {
                 TicTacToeTile winner = TicTacToeGame.findWinner(child.getState());
