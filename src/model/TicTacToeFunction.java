@@ -1,19 +1,14 @@
 package model;
 
-import model.function.Assessable;
 
-public class TicTacToeFunction implements Assessable<TicTacToeNode> {
-    public final TicTacToeNode initial;
-
-
+public class TicTacToeFunction extends AbstractTicTacToeFunction{
     public TicTacToeFunction(TicTacToeNode initial) {
-        this.initial = initial;
+        super(initial);
     }
 
     @Override
     public double evaluate(TicTacToeNode node) {
-        return TicTacToeGame.possibleWins(node.tile, node.getState()) - 
-        TicTacToeGame.possibleWins(node.tile.getOppositeTile(), node.getState());
+        if (TicTacToeGame.findWinner(node.getState()) == null) return 0;
+        return (node.isMax) ? 1 : -1;
     }
-    
 }

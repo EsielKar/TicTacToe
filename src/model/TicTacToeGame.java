@@ -2,9 +2,11 @@ package model;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public final class TicTacToeGame {
+    public static int[][] gameboardPositions = {{1,2,3}, {4,5,6}, {7,8,9}};
     private final TicTacToePlayer p1;
     private final TicTacToePlayer p2;
 
@@ -22,21 +24,29 @@ public final class TicTacToeGame {
                 {null, null, null}
             }
         );
-        boolean band = true;
-        while (!game.isFinished() && TicTacToeGame.findWinner(game) == null) {
-            availableMoves(game);
-            if (band) {
+        for (int[] row : gameboardPositions)
+         System.out.println(Arrays.toString(row));
+
+        boolean turn = true;
+        TicTacToeTile winner = null;
+        while (!game.isFinished() && (winner = TicTacToeGame.findWinner(game)) == null) {
+            System.out.print("Turno de: " );
+            if (turn) {
+                System.out.println(p1.tile);
                 game = p1.getMove(game);
-                band = false;
+                turn = false;
             }else {
+                System.out.println(p2.tile);
                 game = p2.getMove(game);
-                band = true;
+                turn = true;
             }
             System.out.println(game);
         }
-
-        System.out.println("Winner: " + TicTacToeGame.findWinner(game));
-
+        if (winner == null) {
+            System.out.println("Draw, no one wins");
+        } else {
+            System.out.println("Winner: " + winner);
+        }
     }
 
     public static List<Integer> availableMoves(TicTacToeState state) {
